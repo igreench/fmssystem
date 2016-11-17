@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         ui/mainwindow.cpp \
     processing/abstractdataprocessor.cpp \
     processing/generatordataprocessor.cpp \
-    processing/leapmotiondataprocessor.cpp
+    processing/leapmotiondataprocessor.cpp \
+    application.cpp
 
 HEADERS  += ui/mainwindow.h \
     processing/abstractdataprocessor.h \
     processing/generatordataprocessor.h \
-    processing/leapmotiondataprocessor.h
+    processing/leapmotiondataprocessor.h \
+    application.h
 
 FORMS    += ui/mainwindow.ui
