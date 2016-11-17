@@ -13,8 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        ui/mainwindow.cpp \
+    processing/abstractdataprocessor.cpp \
+    processing/generatordataprocessor.cpp \
+    processing/leapmotiondataprocessor.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += ui/mainwindow.h \
+    processing/abstractdataprocessor.h \
+    processing/generatordataprocessor.h \
+    processing/leapmotiondataprocessor.h
 
-FORMS    += mainwindow.ui
+FORMS    += ui/mainwindow.ui
