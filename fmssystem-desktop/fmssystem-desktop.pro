@@ -18,13 +18,15 @@ SOURCES += main.cpp\
     processing/generatordataprocessor.cpp \
     processing/leapmotiondataprocessor.cpp \
     application.cpp \
-    game/gamewidget.cpp
+    ui/gamewidget.cpp \
+    game/cube.cpp
 
 HEADERS  += ui/mainwindow.h \
     processing/abstractdataprocessor.h \
     processing/generatordataprocessor.h \
     processing/leapmotiondataprocessor.h \
     application.h \
-    game/gamewidget.h
+    ui/gamewidget.h \
+    game/cube.h
 
 FORMS    += ui/mainwindow.ui

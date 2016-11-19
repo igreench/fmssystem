@@ -509,7 +509,7 @@ QPushButton:hover {
   <customwidget>
    <class>GameWidget</class>
    <extends>QWidget</extends>
-   <header location="global">game/gamewidget.h</header>
+   <header location="global">ui/gamewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

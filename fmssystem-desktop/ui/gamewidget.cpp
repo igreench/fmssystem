@@ -288,16 +288,3 @@ void GameWidget::drawCube(Cube cube) {
                    cube.getVector()->z() + cube.getSide() / 2);
     glEnd();
 }
-
-Cube::Cube(QVector3D *vector, GLfloat side) {
-    this->vector = vector;
-    this->side = side;
-}
-
-QVector3D *Cube::getVector(){
-    return this->vector;
-}
-
-GLfloat Cube::getSide(){
-    return this->side;
-}

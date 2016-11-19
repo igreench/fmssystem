@@ -4,18 +4,7 @@
 #define GAMEWIDGET_H
 
 #include <QGLWidget>
-
-class Cube {
-public:
-    Cube(QVector3D *vector, GLfloat side);
-
-    QVector3D *getVector();
-    GLfloat getSide();
-
-private:
-    QVector3D *vector;
-    GLfloat side;
-};
+#include "game/cube.h"
 
 class GameWidget : public QGLWidget
 {
