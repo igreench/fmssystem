@@ -15,6 +15,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void setPageWellcome();
+    void setPageMain();
+    void setPageSettings();
+    void setPageStats();
+    void setPageGame();
+
 private:
     Ui::MainWindow *ui;
 };
