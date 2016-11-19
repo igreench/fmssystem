@@ -4,3 +4,7 @@ Application::Application()
 {
 
 }
+
+void Application::start() {
+    mainWindow.show();
+}
