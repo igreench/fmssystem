@@ -406,7 +406,7 @@ QPushButton:hover {
          </rect>
         </property>
         <property name="text">
-         <string>Back</string>
+         <string>Назад</string>
         </property>
        </widget>
        <widget class="QLabel" name="labelSettingsName">
@@ -452,7 +452,7 @@ QPushButton:hover {
          </rect>
         </property>
         <property name="text">
-         <string>Back</string>
+         <string>Назад</string>
         </property>
        </widget>
        <widget class="QLabel" name="labelStatsName">
