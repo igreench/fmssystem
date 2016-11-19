@@ -6,13 +6,22 @@
 GameWidget::GameWidget(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
-    xRot = 0;
-    yRot = 0;
+    xRot = 45 * 16;
+    yRot = 45 * 16;
     zRot = 0;
+
+    cubes.push_back(Cube(new QVector3D(1.0f, 0.0f, 1.0f), 0.4f));
+    cubes.push_back(Cube(new QVector3D(1.0f, 0.0f, 0.0f), 0.4f));
+    cubes.push_back(Cube(new QVector3D(-1.0f, 0.0f, 0.0f), 0.4f));
+
+    isButtonExitHovered = false;
+
+    setMouseTracking(true);
 }
 
 GameWidget::~GameWidget()
 {
+
 }
 
 QSize GameWidget::minimumSizeHint() const
@@ -65,16 +74,9 @@ void GameWidget::setZRotation(int angle)
 
 void GameWidget::initializeGL()
 {
-    qglClearColor(Qt::black);
+    qglClearColor(Qt::white);
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-
-    static GLfloat lightPosition[4] = { 0, 0, 10, 1.0 };
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 }
 
 void GameWidget::paintGL()
@@ -85,7 +87,9 @@ void GameWidget::paintGL()
     glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
     glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
     glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
+
     draw();
+    drawUI();
 }
 
 void GameWidget::resizeGL(int width, int height)
@@ -106,6 +110,10 @@ void GameWidget::resizeGL(int width, int height)
 void GameWidget::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
+
+    if (QRect(590, 490, 152, 52).contains(lastPos)) {
+        emit ButtonExitClick();
+    }
 }
 
 void GameWidget::mouseMoveEvent(QMouseEvent *event)
@@ -122,41 +130,166 @@ void GameWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     lastPos = event->pos();
+
+    if (QRect(590, 490, 152, 52).contains(lastPos)) {
+        if (!this->isButtonExitHovered) {
+            this->isButtonExitHovered = true;
+            updateGL();
+        }
+    } else {
+        if (this->isButtonExitHovered) {
+            this->isButtonExitHovered = false;
+            updateGL();
+        }
+    }
 }
 
 void GameWidget::draw()
 {
-    qglColor(Qt::red);
-    glBegin(GL_QUADS);
-        glNormal3f(0,0,-1);
-        glVertex3f(-1,-1,0);
-        glVertex3f(-1,1,0);
-        glVertex3f(1,1,0);
-        glVertex3f(1,-1,0);
+    qglColor(Qt::green);
+    for (size_t i = 0; i < cubes.size(); i++) {
+        drawCube(cubes[i]);
+    }
+}
 
+void GameWidget::drawUI()
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    // Label
+    painter.setFont(QFont("Microsoft Sans Serif", 52));
+    painter.setPen(Qt::black);
+    painter.drawText(24, 144, 728, 59, Qt::AlignVCenter | Qt::AlignHCenter, "Игра");
+
+    // Button "Exit"
+    if (this->isButtonExitHovered) {
+        painter.fillRect(590, 490, 152, 52, QColor("#5cb85c"));
+    } else {
+        painter.fillRect(590, 490, 152, 52, QColor("#5cd25c"));
+    }
+    painter.setFont(QFont("Microsoft Sans Serif", 18));
+    painter.setPen(Qt::white);
+    painter.drawText(590, 490, 152, 52, Qt::AlignVCenter | Qt::AlignHCenter, "Выход");
+
+    painter.end();
+}
+
+void GameWidget::drawCube(Cube cube) {
+    glBegin(GL_QUADS);
+        // front quad
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        // left quad
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        // right quad
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        // back quad
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        // bottom quad
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() - cube.getSide() / 2);
+
+        // top quad
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() - cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() + cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
+
+        glVertex3f(cube.getVector()->x() + cube.getSide() / 2,
+                   cube.getVector()->y() - cube.getSide() / 2,
+                   cube.getVector()->z() + cube.getSide() / 2);
     glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(0,-1,0.707);
-        glVertex3f(-1,-1,0);
-        glVertex3f(1,-1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(1,0, 0.707);
-        glVertex3f(1,-1,0);
-        glVertex3f(1,1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(0,1,0.707);
-        glVertex3f(1,1,0);
-        glVertex3f(-1,1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(-1,0,0.707);
-        glVertex3f(-1,1,0);
-        glVertex3f(-1,-1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
+}
+
+Cube::Cube(QVector3D *vector, GLfloat side) {
+    this->vector = vector;
+    this->side = side;
+}
+
+QVector3D *Cube::getVector(){
+    return this->vector;
+}
+
+GLfloat Cube::getSide(){
+    return this->side;
 }

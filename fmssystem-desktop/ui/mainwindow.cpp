@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->buttonSettingsBack, SIGNAL(clicked(bool)), this, SLOT(setPageMain()));
     connect(ui->buttonStatsBack, SIGNAL(clicked(bool)), this, SLOT(setPageMain()));
-    connect(ui->buttonGameBack, SIGNAL(clicked(bool)), this, SLOT(setPageMain()));
 
+    connect(ui->gameWidget, SIGNAL(ButtonExitClick()), this, SLOT(setPageMain()));
 }
 
 MainWindow::~MainWindow()

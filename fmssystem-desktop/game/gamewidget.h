@@ -1,9 +1,21 @@
-// myglwidget.h
+// gamewidget.h
 
-#ifndef MYGLWIDGET_H
-#define MYGLWIDGET_H
+#ifndef GAMEWIDGET_H
+#define GAMEWIDGET_H
 
 #include <QGLWidget>
+
+class Cube {
+public:
+    Cube(QVector3D *vector, GLfloat side);
+
+    QVector3D *getVector();
+    GLfloat getSide();
+
+private:
+    QVector3D *vector;
+    GLfloat side;
+};
 
 class GameWidget : public QGLWidget
 {
@@ -11,9 +23,6 @@ class GameWidget : public QGLWidget
 public:
     explicit GameWidget(QWidget *parent = 0);
     ~GameWidget();
-signals:
-
-public slots:
 
 protected:
     void initializeGL();
@@ -37,14 +46,22 @@ signals:
     void yRotationChanged(int angle);
     void zRotationChanged(int angle);
 
+    void ButtonExitClick();
+
 private:
     void draw();
+    void drawUI();
 
     int xRot;
     int yRot;
     int zRot;
 
     QPoint lastPos;
+
+    void drawCube(Cube cube);
+    std::vector < Cube > cubes;
+
+    bool isButtonExitHovered;
 };
 
-#endif // MYGLWIDGET_H
+#endif // GAMEWIDGET_H
