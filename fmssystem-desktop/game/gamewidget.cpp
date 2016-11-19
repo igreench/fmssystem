@@ -77,6 +77,14 @@ void GameWidget::initializeGL()
     qglClearColor(Qt::white);
 
     glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_CULL_FACE);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+
+    static GLfloat lightPosition[4] = { 0, 0, 0, 0.8 };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 }
 
 void GameWidget::paintGL()
