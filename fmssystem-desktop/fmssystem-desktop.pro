@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,12 +17,14 @@ SOURCES += main.cpp\
     processing/abstractdataprocessor.cpp \
     processing/generatordataprocessor.cpp \
     processing/leapmotiondataprocessor.cpp \
-    application.cpp
+    application.cpp \
+    game/gamewidget.cpp
 
 HEADERS  += ui/mainwindow.h \
     processing/abstractdataprocessor.h \
     processing/generatordataprocessor.h \
     processing/leapmotiondataprocessor.h \
-    application.h
+    application.h \
+    game/gamewidget.h
 
 FORMS    += ui/mainwindow.ui
